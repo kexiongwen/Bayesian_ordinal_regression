@@ -125,9 +125,19 @@ $$
 
 3. Setting $\theta_{\Delta}=\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{\theta}_{\Delta}$, then we have
 
+   
 
 $$
-\theta_{\Delta} \sim \mathcal{N}\left(\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix} \tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, \begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\right)
+\theta_{\Delta} \sim \mathcal{N}\left(\left(\begin{array}{cc}
+\lambda^{-2} D_\tau^{-1} & 0 \\
+0 & I_q
+\end{array}\right)\tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, \left(\begin{array}{cc}
+\lambda^{-2} D_\tau^{-1} & 0 \\
+0 & I_q
+\end{array}\right)\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}\left(\begin{array}{cc}
+\lambda^{-2} D_\tau^{-1} & 0 \\
+0 & I_q
+\end{array}\right)\right)
 $$
 
 ### Sampling $\Lambda^{1/2}$ and $\Lambda$
