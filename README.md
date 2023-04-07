@@ -2,7 +2,6 @@
 
 ## PCG Sampler
 
-
 $$
 \begin{aligned}
 & \mbox{Sample} \,\, \boldsymbol{\beta},\boldsymbol{b}|\boldsymbol{W},\boldsymbol{\tau}^{2},\boldsymbol{Z},\lambda,\boldsymbol{\Lambda}  \sim \mathrm{N_{p+q}}((\boldsymbol{\tilde{X}}^{T}\boldsymbol{W} \boldsymbol{\tilde{X}}+C)^{-1}\boldsymbol{\tilde{X}}^{T}\boldsymbol{W}\boldsymbol{Z},(\boldsymbol{\tilde{X}}^{T} \boldsymbol{W}\boldsymbol{\tilde{X}}+C)^{-1})\\
@@ -38,12 +37,13 @@ $$
 where $\Phi=\tilde{X}^{T} W \tilde{X}+\begin{pmatrix} \lambda^{2}D_{\tau^{2}} & 0\\ 0 & \Lambda \end{pmatrix}$
 
 2. Solve the following linear system
-3. 
-   $$
-   \Phi \theta =e
-   $$
-   
-   where $\theta^{T}=(\beta^{T},b^{T})$.  Since $\Phi$ is symmetric and positive-definite, solving the linear system above can be speed up by using the conjugated gradient method.
+
+$$
+\Phi \theta =e
+$$
+
+where $\theta^{T}=(\beta^{T},b^{T})$.  Since $\Phi$ is symmetric and positive-definite, solving the linear system above can be speed up by using the conjugated gradient method.
+
 
  ### Prior preconditioning 
 
@@ -57,7 +57,7 @@ $$
 
 where $M=\begin{pmatrix} \lambda^{4}D_{\tau^{2}}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}$. By setting $\theta=M^{-1/2}\tilde{\theta}$,  we obatin the solution of the original linear system.	
 
-The prior-preconditioned matrix  is given by
+The prior-preconditioned matrix is given by
 
 $$
 \tilde{\Phi}=M^{-1/2}\tilde{X}^{T}W\tilde{X}M^{-1/2}+\begin{pmatrix}I_{p} & 0\\ 0 & \Lambda\end{pmatrix}
@@ -125,7 +125,7 @@ n_{p 1} & n_{p 2} & n_{p 3} & \cdots & c_p
 \end{array}\right)
 $$
 
- where  $c_i^2 \sim \chi_{n-i+1}^2 \text { and } n_{i j} \sim N(0,1)$ independently. This provides a useful method for obtaining random samples from a Wishart distribution.
+where  $c_i^2 \sim \chi_{n-i+1}^2 \text { and } n_{i j} \sim N(0,1)$ independently. This provides a useful method for obtaining random samples from a Wishart distribution.
 
 
 ### Extra approximation to improve the numerical stability 
@@ -148,7 +148,6 @@ If $\lambda^{2}|\beta_{j}| \rightarrow 0$,  then we have$\pi(v_{j} \mid \beta_{j
 
 
 Thus, we define another thresholding parameter $\Delta^{\prime}$.  If $\lambda^{2}|\beta_{j}|<\Delta^{\prime}$,  we will 
-
 
 
 Sample  $v_{j} \mid \beta_{j},\lambda \sim \mathrm{Gamma}(\frac{1}{2},\frac{1}{4})$ 
