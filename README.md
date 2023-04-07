@@ -16,10 +16,7 @@ f(\gamma_{s})1_{l_{s}<\gamma_{s}<u_{s}}
 \end{aligned}
 $$
 
-where  $\tilde{X}= (X,T)$ and $C=\left(\begin{array}{cc}
-\lambda^4 D_{\tau^2}^{-1} & 0 \\
-0 & \Lambda
-\end{array}\right)$
+where  $\tilde{X}= (X,T)$ and $C=\left(\begin{array}{cc} \lambda^4 D_{\tau^2}^{-1} & 0 \\ 0 & \Lambda\end{array}\right)$
 
 ##  Conjugated gradient, prior precondition and sparse linear system approximation
 
@@ -135,9 +132,9 @@ $$
 0 & I_q
 \end{array}\right) \tilde{X}^T W Z, \tilde{\Phi}\right)
 $$
-   
 
-   
+
+
 
 2. Use conjugated gradient method to solve the following linear system for $\bar{\theta}_{\Delta}$:
 
