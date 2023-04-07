@@ -71,19 +71,20 @@ $$
 
 ### Sparse linear system approximation
 
-By using a user-deﬁned thresholding parameter $\Delta$, we can have sparse approximation for the upper $p \times p$ matrix of $\tilde{\Phi}$
+By using a user-deﬁned thresholding parameter $\Delta$, we can have sparse approximation for $\tilde{\Sigma}^{-1}$, such that
+
 
 $$
 \begin{aligned}
-{\tilde{\Phi}_{\Delta}}_{ij}= &
+{\tilde{\Sigma}^{-1}_{\Delta}}_{ij}= &
 \begin{cases} 
-\left(\lambda^{-2} \tau_i\right)\left(\lambda^{-2} \tau_{j}\right)\left(X^{T}D X\right)_{i j} & \text { if }  \lambda^{-2} \tau_i>\Delta \,\, \text{or}\,\, \lambda^{-2} \tau_{j}>\Delta\\ 
+\left(\lambda^{-2} \tau_i\right)\left(\lambda^{-2} \tau_{j}\right)\left(X^{T}D X\right)_{i j} & \text { if }  \lambda^{-2} \tau_i>\Delta \quad \text{or}\quad \lambda^{-2} \tau_{j}>\Delta\\ 
 0 & \text { else } 
 \end{cases}\\
-{\tilde{\Phi}_{\Delta}}_{ii}= &
+{\tilde{\Sigma}^{-1}_{\Delta}}_{ii}= &
 \begin{cases} 
-\left(\lambda^{-4} \tau_{i}^{2}\right)\left(X^{T}D X\right)_{i i}+1 & \quad\,\,\, \text { if }  \lambda^{-2} \tau_i>\Delta\\
-1 & \quad\,\, \,\text { else } 
+\left(\lambda^{-4} \tau_{i}^{2}\right)\left(X^{T}D X\right)_{i i}+1 & \quad\quad \text { if }  \lambda^{-2} \tau_i>\Delta\\
+1 & \quad\quad\text { else } 
 \end{cases}
 \end{aligned}
 $$
