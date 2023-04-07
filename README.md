@@ -79,10 +79,17 @@ $$
 \tilde{\Phi} \tilde{\theta}=\tilde{e} \quad \text{for} \quad \tilde{\Phi}=M^{-1 / 2}\Phi M^{-1 / 2} \quad \text{and} \quad \tilde{e}=M^{-1 / 2} e
 $$
 
-where $M=\left(\begin{array}{cc}
+where 
+
+$$
+M=\left(\begin{array}{cc}
 \lambda^4 D_{\tau^2}^{-1} & 0 \\
 0 & I_q
-\end{array}\right)$. By setting $\theta=M^{-1/2}\tilde{\theta}$,  we obatin the solution of the original linear system.	
+\end{array}\right)
+$$
+
+
+By setting $\theta=M^{-1/2}\tilde{\theta}$,  we obatin the solution of the original linear system.	
 
 The prior-preconditioned matrix is given by
 
