@@ -14,12 +14,12 @@ S5. Sample  $\frac{1}{v_{k}} \mid \beta_{k},\lambda  \sim \mathrm{InverseGaussia
 
 S6. Sample $\frac{1}{\tau_{k}^{2}} \mid \beta_{k},v_{k},\lambda \sim  \mathrm{InverseGaussian}\left(\frac{1}{\lambda^{2}v_{k}|\beta_{k}|},\frac{1}{v_{k}^{2}}\right), \quad k=1,\dots,p$
 
-S7. Sample $z_{i} \mid  y_{i},\beta,b,\gamma  \sim \mathrm{Logistic}(x_{i}\beta+T_{i}b,1)1(\gamma_{s-1}<z_{i}<\gamma_{s}), \quad \text{if} \quad y_{i}=s$
+S7. Sample $z_{i} \mid  y_{i},\beta,b,\gamma  \sim \mathrm{Logistic}(x_{i}\beta+T_{i}b,1)1_{\gamma_{s-1} < z_{i} < \gamma_{s}}, \quad \text{if} \quad y_{i}=s \quad \text{for} \quad  i=1,\dots,n$
 
 S8. Sample $w_{i} \mid z_{i},\beta,b \sim \mathrm{Gamma}\left(\frac{\nu}{2},\frac{\nu\eta^{2}+(z_{i}-x_{i}\beta-T_{i}b)^{2}}{2}\right), \quad i=1,\dots,n$
 
-S8. Sample $\gamma_{s} \sim \pi(\gamma_{s}|\gamma_{-s},Y,Z) \propto 
-f(\gamma_{s})1_{l_{s}<\gamma_{s}<u_{s}}$
+S8. Sample $\gamma_{s} \sim \pi( \gamma_{s} \mid \gamma_{-s},Y,Z) \propto 
+f( \gamma_{s} ) 1_{ l_{s} < \gamma_{s} < u_{s} }$
 
 where  $\tilde{X}= (X,T)$ and 
 
