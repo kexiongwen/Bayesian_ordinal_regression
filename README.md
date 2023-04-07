@@ -16,7 +16,10 @@ f(\gamma_{s})1_{l_{s}<\gamma_{s}<u_{s}}
 \end{aligned}
 $$
 
-where  $\tilde{X}= (X,T)$ and $C=\begin{pmatrix} \lambda^{4}D_{\tau^{2}}^{-1} & 0\\ 0 & \Lambda \end{pmatrix}$
+where  $\tilde{X}= (X,T)$ and $C=\left(\begin{array}{cc}
+\lambda^4 D_{\tau^2}^{-1} & 0 \\
+0 & \Lambda
+\end{array}\right)$
 
 ##  Conjugated gradient, prior precondition and sparse linear system approximation
 
@@ -37,7 +40,10 @@ e=\tilde{X}^{T}WZ+\tilde{X}^{T} W^{1 / 2} \eta+\left(\begin{array}{cc}
 \end{array}\right) \odot \delta
 $$
 
-where $\Phi=\tilde{X}^{T} W \tilde{X}+\begin{pmatrix} \lambda^{2}D_{\tau^{2}} & 0\\ 0 & \Lambda \end{pmatrix}$
+where $\Phi=\tilde{X}^{T} W \tilde{X}+\left(\begin{array}{cc}
+\lambda^2 D_{\tau^2} & 0 \\
+0 & \Lambda
+\end{array}\right)$
 
 2. Solve the following linear system
 
@@ -63,7 +69,10 @@ where $M=\begin{pmatrix} \lambda^{4}D_{\tau^{2}}^{-1} & 0 \\  0& I_{q}  \end{pma
 The prior-preconditioned matrix is given by
 
 $$
-\tilde{\Phi}=M^{-1/2}\tilde{X}^{T}W\tilde{X}M^{-1/2}+\begin{pmatrix}I_{p} & 0\\ 0 & \Lambda\end{pmatrix}
+\tilde{\Phi}=M^{-1/2}\tilde{X}^{T}W\tilde{X}M^{-1/2}+\left(\begin{array}{cc}
+I_p & 0 \\
+0 & \Lambda
+\end{array}\right)
 $$
 
 The prior-preconditioned vector is given by
