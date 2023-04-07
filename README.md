@@ -127,24 +127,33 @@ Therefore, we obtain a three-step procedure to sample the condition posterior of
 
 
 
-1. Generate $\tilde{e}_{\Delta} \sim \mathcal{N}\left(\left(\begin{array}{cc}
-   \lambda^{-2} D_\tau^{-1} & 0 \\
-   0 & I_q
-   \end{array}\right) \tilde{X}^T W Z, \tilde{\Phi}\right)$.
+1. Generate 
+
+$$
+\tilde{e}_{\Delta} \sim \mathcal{N}\left(\left(\begin{array}{cc}
+\lambda^{-2} D_\tau^{-1} & 0 \\
+0 & I_q
+\end{array}\right) \tilde{X}^T W Z, \tilde{\Phi}\right)
+$$
+   
 
    
 
 2. Use conjugated gradient method to solve the following linear system for $\bar{\theta}_{\Delta}$:
 
+   
+
 $$
 \tilde{\Phi}_{\Delta}\tilde{\theta}_{\Delta}=\tilde{e}
 $$
 
+
+
 3. Setting $\theta_{\Delta}=\left(\begin{array}{cc}
    \lambda^{-2} D_\tau^{-1} & 0 \\
    0 & I_q
-   \end{array}\right)\tilde{\theta}_{\Delta}$, then we have
-   
+   \end{array}\right)\tilde{\theta}_{\Delta}$,  then we have
+
    
 
 $$
@@ -160,6 +169,8 @@ $$
 \end{array}\right)\right)
 $$
 
+
+
 ### Sampling $\Lambda^{1/2}$ and $\Lambda$
 
 Now we discuss how to sample $\Lambda^{1/2}$ and $\Lambda$ from $\boldsymbol{\Lambda}|\boldsymbol{b} \sim \mathrm{Wishart}(t+1,(dI_{q}+bb^{T})^{-1})$  efficiently. Note that the Bartlett decomposition of a matrix $\Lambda$ from a $q$-variate Wishart distribution with scale matrix $V$ and $n$ degrees of freedom is the factorization:
@@ -170,6 +181,7 @@ $$
 
 where $L$ is the Cholesky factor of $(dI_{q}+bb^{T})^{-1}=\frac{1}{d}I_{q}-\frac{bb^{T}}{d^{2}+d\|b\|_{2}^{2}}$, and
 
+
 $$
 A=\left(\begin{array}{ccccc}
 c_1 & 0 & 0 & \cdots & 0 \\
@@ -179,6 +191,8 @@ n_{31} & n_{32} & c_3 & \cdots & 0 \\
 n_{p 1} & n_{p 2} & n_{p 3} & \cdots & c_p
 \end{array}\right)
 $$
+
+
 
 where  $c_i^2 \sim \chi_{n-i+1}^2 \text { and } n_{i j} \sim N(0,1)$ independently. This provides a useful method for obtaining random samples from a Wishart distribution.
 
