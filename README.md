@@ -89,8 +89,10 @@ $$
 \end{aligned}    
 $$
 
+For setting the prior of the cutoff points $\gamma=(\gamma_{1},...,\gamma_{S-1})$, first suppose that there is a normal distribution $Z\sim N(0,\sigma_{0}^{2})$ with CDF function $F(\cdot)$, such that the probability at the interval between each cutoff point is 
 
-For setting the prior of the cutoff points $\gamma=(\gamma_{1},...,\gamma_{S-1})$, first suppose that there is a normal distribution $Z\sim N(0,\sigma_{0}^{2})$ with CDF function $F(\cdot)$, such that the probability at the interval between each cutoff point is $p_{s}=P(\gamma_{s-1}<z<\gamma_{s})=F(\gamma_{s})-F(\gamma_{s-1})$ with $j=1,..,S$. So $\sum_{s=1}^{S}p_{s}=1$. It follows that:
+$p_{s}=P(\gamma_{s-1} < z <\gamma_{s})=F(\gamma_{s})-F(\gamma_{s-1})$ with $j=1,\ldots,S$.  So $\sum_{s=1}^{S}p_{s}=1$. It follows that:
+
 
 
 $$
