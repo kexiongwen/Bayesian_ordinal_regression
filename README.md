@@ -103,13 +103,7 @@ $$
 The prior-preconditioned vector is given by
 
 $$
-\tilde{e}=\left(\begin{array}{cc}
-\lambda^{-2} D_\tau & 0 \\
-0 & I_q
-\end{array}\right) \tilde{X}^{T}WZ+\left(\begin{array}{cc}
-\lambda^{-2} D_\tau & 0 \\
-0 & I_q
-\end{array}\right) \tilde{X}^{T} W^{1 / 2} \eta+ \left(\begin{array}{cc}
+\tilde{e}=M^{-1/2} \tilde{X}^{T}WZ+M^{-1/2} \tilde{X}^{T} W^{1 / 2} \eta+ \left(\begin{array}{cc}
 I_p & 0 \\
 0 & \Lambda^ {1/2}
 \end{array}\right)\delta
@@ -142,10 +136,7 @@ Therefore, we obtain a three-step procedure to sample the condition posterior of
 1. Generate 
 
 $$
-\tilde{e}_{\Delta} \sim \mathcal{N}\left(\left(\begin{array}{cc}
-\lambda^{-2} D_\tau^{-1} & 0 \\
-0 & I_q
-\end{array}\right) \tilde{X}^T W Z, \tilde{\Phi}\right)
+\tilde{e}_{\Delta} \sim \mathcal{N}\left(M^{-1/2} \tilde{X}^T W Z, \tilde{\Phi}\right)
 $$
 
 
@@ -161,29 +152,14 @@ $$
 
 
 
-3. Setting 
+3. Setting $\theta_{\Delta}=M^{-1/2}\tilde{\theta}_{\Delta}$ then we have
 
-$$
-\theta_{\Delta}=\left(\begin{array}{cc}
-\lambda^{-2} D_\tau^{-1} & 0 \\
-0 & I_q
-\end{array}\right)\tilde{\theta}_{\Delta}
-$$
-
-then we have
    
+
 $$
-\theta_{\Delta} \sim \mathcal{N}\left(\left(\begin{array}{cc}
-\lambda^{-2} D_\tau^{-1} & 0 \\
-0 & I_q
-\end{array}\right)\tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, \left(\begin{array}{cc}
-\lambda^{-2} D_\tau^{-1} & 0 \\
-0 & I_q
-\end{array}\right)\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}\left(\begin{array}{cc}
-\lambda^{-2} D_\tau^{-1} & 0 \\
-0 & I_q
-\end{array}\right)\right)
+\theta_{\Delta} \sim \mathcal{N}\left(M^{-1/2}\tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, M^{-1/2}\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}M^{-1/2}\right)
 $$
+
 
 
 ### Sampling $\Lambda^{1/2}$ and $\Lambda$
