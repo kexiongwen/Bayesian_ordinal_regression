@@ -18,8 +18,7 @@ S7. Sample $z_{i} \mid  y_{i},\beta,b,\gamma  \sim \mathrm{Logistic}(x_{i}\beta+
 
 S8. Sample $w_{i} \mid z_{i},\beta,b \sim \mathrm{Gamma}\left(\frac{\nu}{2},\frac{\nu\eta^{2}+(z_{i}-x_{i}\beta-T_{i}b)^{2}}{2}\right), \quad i=1,\dots,n$
 
-S8. Sample $\gamma_{s} \sim \pi( \gamma_{s} \mid \gamma_{-s},Y,Z) \propto 
-f( \gamma_{s} ) 1_{ l_{s} < \gamma_{s} < u_{s} }$
+S8. Sample $\gamma_{s} \sim \pi(\gamma_{s}|\gamma_{-s},Y,Z) \propto f(\gamma_{s})1_{l_{s} < \gamma_{s} < u_{s}}$
 
 where  $\tilde{X}= (X,T)$ and 
 
