@@ -4,14 +4,14 @@
 
 $$
 \begin{aligned}
-& \mbox{Sample} \,\, \boldsymbol{\beta},\boldsymbol{b}|\boldsymbol{W},\boldsymbol{\tau}^{2},\boldsymbol{Z},\lambda,\boldsymbol{\Lambda}  \sim \mathrm{N_{p+q}}((\boldsymbol{\tilde{X}}^{T}\boldsymbol{W} \boldsymbol{\tilde{X}}+C)^{-1}\boldsymbol{\tilde{X}}^{T}\boldsymbol{W}\boldsymbol{Z},(\boldsymbol{\tilde{X}}^{T} \boldsymbol{W}\boldsymbol{\tilde{X}}+C)^{-1})\\
-& \mbox{Sample} \,\,\boldsymbol{\Lambda}|\boldsymbol{b} \sim \mathrm{Wishart}(t+1,(dI_{q}+bb^{T})^{-1})\\
+& \mbox{Sample} \,\, \beta,b|W,\tau^{2},Z,\lambda,\Lambda  \sim \mathrm{N_{p+q}}((\tilde{X}^{T}W \tilde{X}+C)^{-1}\tilde{X}^{T}WZ,(\tilde{X}^{T} W\tilde{X}+C)^{-1})\\
+& \mbox{Sample} \,\,\Lambda|b \sim \mathrm{Wishart}(t+1,(dI_{q}+bb^{T})^{-1})\\
 & \mbox{Sample} \,\,\lambda|\beta \sim \mathrm{Gamma}(2p+0.5,\sum_{k=1}^{p}|\beta_{k}|^{\frac{1}{2}}+\frac{1}{\phi})\\
 & \mbox{Sample} \,\, \phi|\lambda \sim \mathrm{InvGamma}(1,1+\lambda)\\
 & \mbox{Sample} \,\, \frac{1}{v_{k}}|\beta_{k},\lambda  \sim \mathrm{InverseGaussian}\left(\sqrt{\frac{1}{4\lambda^{2}|\beta_{k}|}},\frac{1}{2}\right), \quad k=1,...,p\\
 & \mbox{Sample} \,\,\frac{1}{\tau_{k}^{2}}|\beta_{k},v_{k},\lambda \sim  \mathrm{InverseGaussian}\left(\frac{1}{\lambda^{2}v_{k}|\beta_{k}|},\frac{1}{v_{k}^{2}}\right), \quad k=1,...,p\\
-& \mbox{Sample} \,\,z_{i}|y_{i},\boldsymbol{\beta},\boldsymbol{b},\boldsymbol{\gamma}  \sim \mathrm{Logistic}(x_{i}\boldsymbol{\beta}+T_{i}\boldsymbol{b},1)1_{\gamma_{s-1}<z_{i}<\gamma_{s}}, \,\,\, \text{if} \,\,\,y_{i}=s, \,\,\,\text{for} \,\,\,  i=1,...,n\\
-& \mbox{Sample} \,\,w_{i}|z_{i},\boldsymbol{\beta},\boldsymbol{b} \sim \mathrm{Gamma}\left(\frac{\nu}{2},\frac{\nu\eta^{2}+(z_{i}-x_{i}\boldsymbol{\beta}-T_{i}\boldsymbol{b})^{2}}{2}\right), \quad i=1,...,n\\& \mbox{Sample} \,\, \gamma_{s} \sim \pi(\gamma_{s}|\gamma_{-s},\boldsymbol{Y},\boldsymbol{Z}) \propto 
+& \mbox{Sample} \,\,z_{i}|y_{i},\beta,b,\gamma  \sim \mathrm{Logistic}(x_{i}\beta+T_{i}b,1)1_{\gamma_{s-1}<z_{i}<\gamma_{s}}, \,\,\, \text{if} \,\,\,y_{i}=s, \,\,\,\text{for} \,\,\,  i=1,...,n\\
+& \mbox{Sample} \,\,w_{i}|z_{i},\beta,b \sim \mathrm{Gamma}\left(\frac{\nu}{2},\frac{\nu\eta^{2}+(z_{i}-x_{i}\beta-T_{i}b)^{2}}{2}\right), \quad i=1,...,n\\& \mbox{Sample} \,\, \gamma_{s} \sim \pi(\gamma_{s}|\gamma_{-s},Y,Z) \propto 
 f(\gamma_{s})1_{l_{s}<\gamma_{s}<u_{s}}
 \end{aligned}
 $$
