@@ -33,6 +33,8 @@ $$
 
 1. Generate $e \sim \mathcal{N}\left(\tilde{X}^{T} W Z, \Phi\right)$ by sampling independent Gaussian vectors $\eta \sim \mathcal{N}\left(0, I_{n}\right)$  and $\delta \sim \mathcal{N}\left(0, I_{p+q}\right)$
 
+   
+
 $$
 e=\tilde{X}^{T}WZ+\tilde{X}^{T} W^{1 / 2} \eta+\left(\begin{array}{cc}
 \lambda^2 D_{\tau^2}^{-1 / 2} & 0 \\
@@ -40,16 +42,24 @@ e=\tilde{X}^{T}WZ+\tilde{X}^{T} W^{1 / 2} \eta+\left(\begin{array}{cc}
 \end{array}\right) \odot \delta
 $$
 
-where $\Phi=\tilde{X}^{T} W \tilde{X}+\left(\begin{array}{cc}
+
+
+where $\Phi=\tilde{X}^T W \tilde{X}+\left(\begin{array}{cc}
 \lambda^2 D_{\tau^2} & 0 \\
 0 & \Lambda
 \end{array}\right)$
 
+
+
 2. Solve the following linear system
+
+   
 
 $$
 \Phi \theta =e
 $$
+
+
 
 where $\theta^{T}=(\beta^{T},b^{T})$.  Since $\Phi$ is symmetric and positive-definite, solving the linear system above can be speed up by using the conjugated gradient method.
 
