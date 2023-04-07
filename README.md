@@ -133,16 +133,32 @@ Therefore, we obtain a three-step procedure to sample the condition posterior of
 
 
 
-1. Generate $\tilde{e}_{\Delta} \sim \mathcal{N}\left(M^{-1/2} \tilde{X}^T W Z, \tilde{\Phi}\right)$
+1. Generate 
+
+$$
+\tilde{e}_{\Delta} \sim \mathcal{N}\left(M^{-1/2} \tilde{X}^T W Z, \tilde{\Phi}\right)
+$$
 
 
 
 
-2. Use conjugated gradient method to solve the following linear system  $\tilde{\Phi}_{\Delta}\tilde{\theta}_{\Delta}=\tilde{e}$ for  $\bar{\theta}_{\Delta}$.
+2. Use conjugated gradient method to solve the following linear system for  $\bar{\theta}_{\Delta}$:
+
+   
+   $$
+   \tilde{\Phi}_{\Delta}\tilde{\theta}_{\Delta}=\tilde{e}
+   $$
+   
 
    
 
-3. Setting $\theta_{\Delta}=M^{-1/2}\tilde{\theta}_{\Delta}$ then we have $\theta_{\Delta} \sim \mathcal{N}\left(M^{-1/2}\tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, M^{-1/2}\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}M^{-1/2}\right)$
+3. Setting $\theta_{\Delta}=M^{-1/2}\tilde{\theta}_{\Delta}$ then we have 
+
+   
+   $$
+   \theta_{\Delta} \sim \mathcal{N}\left(M^{-1/2}\tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, M^{-1/2}\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}M^{-1/2}\right)
+   $$
+   
 
    
 
