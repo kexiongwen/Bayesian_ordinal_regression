@@ -64,7 +64,10 @@ $$
 \tilde{\Phi} \tilde{\theta}=\tilde{e} \quad \text{for} \quad \tilde{\Phi}=M^{-1 / 2}\Phi M^{-1 / 2} \quad \text{and} \quad \tilde{e}=M^{-1 / 2} e
 $$
 
-where $M=\begin{pmatrix} \lambda^{4}D_{\tau^{2}}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}$. By setting $\theta=M^{-1/2}\tilde{\theta}$,  we obatin the solution of the original linear system.	
+where $M=\left(\begin{array}{cc}
+\lambda^4 D_{\tau^2}^{-1} & 0 \\
+0 & I_q
+\end{array}\right)$. By setting $\theta=M^{-1/2}\tilde{\theta}$,  we obatin the solution of the original linear system.	
 
 The prior-preconditioned matrix is given by
 
@@ -78,7 +81,16 @@ $$
 The prior-preconditioned vector is given by
 
 $$
-\tilde{e}=\begin{pmatrix} \lambda^{-2}D_{\tau} & 0 \\  0& I_{q}  \end{pmatrix} \tilde{X}^{T}WZ+\begin{pmatrix} \lambda^{-2}D_{\tau} & 0 \\  0 & I_{q}  \end{pmatrix} \tilde{X}^{T} W^{1 / 2} \eta+ \begin{pmatrix} I_{p} & 0\\ 0 & \Lambda^{1/2} \end{pmatrix}\delta
+\tilde{e}=\left(\begin{array}{cc}
+\lambda^{-2} D_\tau & 0 \\
+0 & I_q
+\end{array}\right) \tilde{X}^{T}WZ+\left(\begin{array}{cc}
+\lambda^{-2} D_\tau & 0 \\
+0 & I_q
+\end{array}\right) \tilde{X}^{T} W^{1 / 2} \eta+ \left(\begin{array}{cc}
+I_p & 0 \\
+0 & \Lambda^ {1/2}
+\end{array}\right)\delta
 $$
 
 ### Sparse linear system approximation
@@ -103,7 +115,7 @@ $$
 
 Therefore, we obtain a three-step procedure to sample the condition posterior of $(\beta,b)$.
 
-1. Generate $\tilde{e}_{\Delta} \sim \mathcal{N}\left(\begin{pmatrix} \lambda^{-2}D_{\tau^{2}}^{-1/2} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{X}^{T} W Z, \tilde{\Phi}\right)$ by using equation $(\ref{eq:e_tilde})$.
+1. Generate $\tilde{e}_{\Delta} \sim \mathcal{N}\left(\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{X}^{T} W Z, \tilde{\Phi}\right)$ by using equation $(\ref{eq:e_tilde})$.
 
 2. Use conjugated gradient method to solve the following linear system for $\bar{\theta}_{\Delta}$:
 
@@ -111,11 +123,11 @@ $$
 \tilde{\Phi}_{\Delta}\tilde{\theta}_{\Delta}=\tilde{e}
 $$
 
-3. Setting $\theta_{\Delta}=\begin{pmatrix} \lambda^{-2}D_{\tau^{2}}^{-1/2} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{\theta}_{\Delta}$, then we have
+3. Setting $\theta_{\Delta}=\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{\theta}_{\Delta}$, then we have
 
 
 $$
-\theta_{\Delta} \sim \mathcal{N}\left(\begin{pmatrix} \lambda^{-2}D_{\tau^{2}}^{-1/2} & 0 \\  0& I_{q}  \end{pmatrix} \tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, \begin{pmatrix} \lambda^{-2}D_{\tau^{2}}^{-1/2} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}\begin{pmatrix} \lambda^{-2}D_{\tau^{2}}^{-1/2} & 0 \\  0& I_{q}  \end{pmatrix}\right)
+\theta_{\Delta} \sim \mathcal{N}\left(\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix} \tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, \begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\right)
 $$
 
 ### Sampling $\Lambda^{1/2}$ and $\Lambda$
