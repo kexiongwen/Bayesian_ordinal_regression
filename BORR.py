@@ -8,7 +8,7 @@ from scipy.stats import invgamma
 from scipy.stats import invgauss
 from scipy.stats import beta as beta_d
 
-def truncbeta(a,low,upp):
+def trunc(a,low,upp):
     
     if (upp-low)>0.4 or a==1:
         
@@ -63,7 +63,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
     beta_sample=np.ones((P,M+burn_in))
     b_sample=np.ones((Q,M+burn_in))
     beta_b=np.ones(P+Q)
-    tau2_sample=np.ones(P)
+    tau_sample=np.ones(P)
     v_sample=np.ones(P)
     Z_sample=np.zeros((N,1))
     omega_sample=np.ones(N)
@@ -84,11 +84,11 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
         #Sample beta and b
 
         #Prior preconditioning matrix from global-local shrinkage
-        G_diag=(tau2_sample**0.5)/lam_sample**2
+        G_diag=tau_sample/lam_sample**2
         G=sparse.csr_matrix(block_diag(np.diag(G_diag), np.diag(np.ones(Q))))
 
         #Weight
-        D=spdiags((omega_sample**0.5).ravel(),0,N,N)
+        D=spdiags((np.sqrt(omega_sample)).ravel(),0,N,N)
       
         #Preconditioning feature matrix
         FTD=sparse.csr_matrix.dot(F.T,D)
@@ -118,7 +118,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
         v_sample=2/invgauss.rvs((lam_sample*np.abs(beta_sample[:,i])**0.5)**-1)
         
         #Sample tau2
-        tau2_sample=v_sample**2/invgauss.rvs(v_sample/(lam_sample**2*abs(beta_sample[:,i])))
+        tau_sample=v_sample/np.sqrt(invgauss.rvs(v_sample/(lam_sample**2*abs(beta_sample[:,i]))))
         
         #Sample Z
         Mean=X@beta_sample[:,i]+T@b_sample[:,i]
@@ -147,7 +147,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
             scale=ink[j+1]-ink[j-1]    
             low2=(logistic.cdf(np.amax(Z_sample[Y.ravel()==j]))-ink[j-1])/scale
             upp2=(logistic.cdf(np.amin(Z_sample[Y.ravel()==(j+1)]))-ink[j-1])/scale
-            ink[j]=truncbeta(alpha,low2,upp2)*scale+ink[j-1]
+            ink[j]=trunc(alpha,low2,upp2)*scale+ink[j-1]
                   
         cutpoints_sample[:,i]=logistic.ppf(ink)
                    
