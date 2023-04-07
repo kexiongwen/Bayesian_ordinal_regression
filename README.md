@@ -1,5 +1,3 @@
-
-
 # Bayesian ordinal regression with random effect 
 
 ## PCG Sampler
