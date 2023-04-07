@@ -109,11 +109,13 @@ $$
 Then we assign a  symmetric Dirichlet prior to $(p_{1},p_{2},...,p_{S})$. That is
 
 
+
 $$
 \pi\left(p_{1}, \ldots, p_{S} | \alpha\right)=\frac{\Gamma(\alpha S)}{\Gamma(\alpha)^{S}} \prod_{s=1}^{S} p_{s}^{\alpha-1}
 $$
-By transformation from equation (3), we have 
 
+
+By transformation from equation (3), we have 
 
 $$
 \pi(\gamma_{1},\gamma_{2},...,\gamma_{S-1} \mid \alpha,v)=\frac{\Gamma(\alpha S)}{\Gamma(\alpha)^{S}} \prod_{s=1}^{S}[F(\gamma_{s})-F(\gamma_{s-1})]^{\alpha-1}\prod_{s=1}^{S-1}f(\gamma_{s})
