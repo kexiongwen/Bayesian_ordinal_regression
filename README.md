@@ -133,11 +133,7 @@ Therefore, we obtain a three-step procedure to sample the condition posterior of
 
 
 
-1. Generate 
-
-$$
-\tilde{e}_{\Delta} \sim \mathcal{N}\left(M^{-1/2} \tilde{X}^T W Z, \tilde{\Phi}\right)
-$$
+1. Generate $\tilde{e}_{\Delta} \sim \mathcal{N}\left(M^{-1/2} \tilde{X}^T W Z, \tilde{\Phi}\right)$
 
 
 
