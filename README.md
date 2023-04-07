@@ -125,7 +125,14 @@ $$
 
 Therefore, we obtain a three-step procedure to sample the condition posterior of $(\beta,b)$.
 
-1. Generate $\tilde{e}_{\Delta} \sim \mathcal{N}\left(\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{X}^{T} W Z, \tilde{\Phi}\right)$ by using equation $(\ref{eq:e_tilde})$.
+
+
+1. Generate $\tilde{e}_{\Delta} \sim \mathcal{N}\left(\left(\begin{array}{cc}
+   \lambda^{-2} D_\tau^{-1} & 0 \\
+   0 & I_q
+   \end{array}\right) \tilde{X}^T W Z, \tilde{\Phi}\right)$.
+
+   
 
 2. Use conjugated gradient method to solve the following linear system for $\bar{\theta}_{\Delta}$:
 
@@ -133,8 +140,11 @@ $$
 \tilde{\Phi}_{\Delta}\tilde{\theta}_{\Delta}=\tilde{e}
 $$
 
-3. Setting $\theta_{\Delta}=\begin{pmatrix} \lambda^{-2}D_{\tau}^{-1} & 0 \\  0& I_{q}  \end{pmatrix}\tilde{\theta}_{\Delta}$, then we have
-
+3. Setting $\theta_{\Delta}=\left(\begin{array}{cc}
+   \lambda^{-2} D_\tau^{-1} & 0 \\
+   0 & I_q
+   \end{array}\right)\tilde{\theta}_{\Delta}$, then we have
+   
    
 
 $$
