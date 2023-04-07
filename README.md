@@ -25,7 +25,7 @@ where  $\tilde{X}= (X,T)$ and $C=\begin{pmatrix} \lambda^{4}D_{\tau^{2}}^{-1} & 
 The following procedure generates a sample $\beta$ and $b$  from
 
 $$
-\boldsymbol{\beta},\boldsymbol{b}|\boldsymbol{W},\boldsymbol{\tau}^{2},\boldsymbol{Z},\lambda,\boldsymbol{\Lambda}  \sim \mathrm{N_{p+q}}((\boldsymbol{\tilde{X}}^{T}\boldsymbol{W} \boldsymbol{\tilde{X}}+C)^{-1}\boldsymbol{\tilde{X}}^{T}\boldsymbol{W}\boldsymbol{Z},(\boldsymbol{\tilde{X}}^{T} \boldsymbol{W}\boldsymbol{\tilde{X}}+C)^{-1})
+\beta,b \mid W,\tau^{2},Z,\lambda,\Lambda  \sim \mathrm{N_{p+q}}((\tilde{X}^{T}W \tilde{X}+C)^{-1}\tilde{X}^{T}WZ,(\tilde{X}^{T} W\tilde{X}+C)^{-1})
 $$
 
 1. Generate $e \sim \mathcal{N}\left(\tilde{X}^{T} W Z, \Phi\right)$ by sampling independent Gaussian vectors $\eta \sim \mathcal{N}\left(0, I_{n}\right)$  and $\delta \sim \mathcal{N}\left(0, I_{p+q}\right)$
