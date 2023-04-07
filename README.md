@@ -17,7 +17,14 @@ f(\gamma_{s})1_{l_{s}<\gamma_{s}<u_{s}}
 \end{aligned}
 $$
 
-where  $\tilde{X}= (X,T)$ and $C=\left(\begin{array}{cc} \lambda^4 D_{\tau^2}^{-1} & 0 \\ 0 & \Lambda\end{array}\right)$
+where  $\tilde{X}= (X,T)$ and 
+
+$$
+C=\left(\begin{array}{cc}
+\lambda^4 D_{\tau^2}^{-1} & 0 \\
+0 & \Lambda
+\end{array}\right)
+$$
 
 ##  Conjugated gradient, prior precondition and sparse linear system approximation
 
