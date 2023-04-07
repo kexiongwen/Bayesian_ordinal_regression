@@ -65,11 +65,14 @@ In plain English, for 100th observation, $t_{100}$ records which student took th
 
 # Prior setting
 To introduce sparsity into the model, we choose exponential power prior for the parameters $\beta$
-$$
-\pi(\beta_{k} \mid \lambda)=\frac{\lambda^{2}}{4}\exp(-\lambda |\beta_{k}|^{\frac{1}{2}})    
-$$
-with hyper-parameter $\sqrt{\lambda} \sim \mathrm{Cauchy}(0,1)$. The exponential power prior with $\alpha=\frac{1}{2}$ has Normal-Exponential -Gamma mixture representation:
 
+
+$$
+\pi(\beta_{k} \mid \lambda)=\frac{\lambda^{2}}{4}\exp(-\lambda |\beta_{k}|^{\frac{1}{2}})
+$$
+
+
+with hyper-parameter $\sqrt{\lambda} \sim \mathrm{Cauchy}(0,1)$. The exponential power prior with $\alpha=\frac{1}{2}$ has Normal-Exponential -Gamma mixture representation:
 
 $$
 \begin{aligned}
