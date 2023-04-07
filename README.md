@@ -128,29 +128,33 @@ $$
 where  $c_i^2 \sim \chi_{n-i+1}^2 \text { and } n_{i j} \sim N(0,1)$ independently. This provides a useful method for obtaining random samples from a Wishart distribution.
 
 
+
 ### Extra approximation to improve the numerical stability 
 
 In PCG sampler scheme for $L_{1/2}$ prior, we need to sample 
 
-$\frac{1}{v_{j}} \mid \beta_{j}, \lambda,
-\sim \mathrm{InvGaussian}\left (\sqrt{\frac{1}{4\lambda^{2}|\beta_{j}|}},\frac{1}{2}\right)$ and $\frac{1}{{\tau}_{j}^{2}} \mid \lambda,\beta_{j},v_{j} 
-\sim  \mathrm{InvGaussian}\left (\frac{1}{{\lambda}^{2}{v}_{j}|\beta_{j}|},\frac{1}{{v}_{j}^{2}}\right)$
-
-When $\lambda^{2}|\beta_{j}| \rightarrow 0$ ,  the mode, the mean and the variance of conditional posterior of $\frac{1}{v_{j}}$ and $\frac{1}{\tau_{j}^{2}}$ will tend to infinte. In high dimension and very sparse setting, this will lead to the numerical instable problem. We see that 
 
 
+$\frac{1}{v_{j}} \sim \operatorname{InvGaussian}\left(\sqrt{\frac{1}{4 \lambda^{ 2}\left|\beta_{j}\right|}}, \frac{1}{2}\right) \quad \text{and}  \quad \frac{1}{\tau_{j}} \sim \operatorname{InvGaussian}\left(\frac{1}{\lambda^{2} v_{j}\left|\beta_{j}\right|}, \frac{1}{v_{j}}\right)$
+
+
+
+When $\lambda^{2}|\beta_{j}| \rightarrow 0$ ,  the mode, the mean and the variance of conditional posterior of $\frac{1}{v_{j}}$ and $\frac{1}{\tau_{j}^{2}}$ will tend to infinte. In high dimension and very sparse setting, in very rarely case this will lead to the numerical instable problem. Python will report divide by zero encountered in true divide when evaulating $\sqrt{\frac{1}{4\lambda^{2}|\beta_{j}|}}$ or $\frac{1}{{\lambda}^{2}v_{j}|\beta_{j}|}$. 
+
+
+
+We see that 
 
 $\pi(v_{j} \mid \beta_{j},\lambda)\propto \pi(\beta \mid \lambda, v_{j})\pi(v_{j}) \propto \exp\left(-\frac{\lambda^{2}|\beta_{j}|}{v_{j}}-\frac{1}{4}v_{j}\right)v_{j}^{-1/2}$ and $\pi(\tau_{j}^{2} \mid \lambda,\beta_{j},v_{j}) \propto \pi(\beta_{j} \mid \tau_{j}^{2},\lambda)\pi(\tau_{j}^{2}\mid v_{j}) \propto \tau_{j}^{-1}\exp \left(-\frac{\lambda^{4}\beta_{j}^{2}}{\tau_{j}^{2}}-\frac{\tau_{j}^{2}}{2v_{j}^{2}}\right)$
 
 
 
-If $\lambda^{2}|\beta_{j}| \rightarrow 0$,  then we have$\pi(v_{j} \mid \beta_{j},\lambda) \rightarrow \mathrm{Gamma}(\frac{1}{2},\frac{1}{4})$ and $\pi(\tau_{j}^{2} \mid \lambda,\beta_{j},v_{j}) \rightarrow \mathrm{Gamma}(\frac{1}{2},\frac{1}{2v_{j}^{2}})$. 
+If $\lambda^{2}|\beta_{j}| \rightarrow 0$,  then we have $\pi(v_{j} \mid \beta_{j},\lambda) \rightarrow \mathrm{Gamma}(\frac{1}{2},\frac{1}{4})$ and $\pi(\tau_{j}^{2} \mid \lambda,\beta_{j},v_{j}) \rightarrow \mathrm{Gamma}(\frac{1}{2},\frac{1}{2v_{j}^{2}})$. 
 
-
-Thus, we define another thresholding parameter $\Delta^{\prime}$.  If $\lambda^{2}|\beta_{j}|<\Delta^{\prime}$,  we will 
-
+Thus to improve numerical stability,  we define another thresholding parameter $\Delta$.  If $\lambda^{2}|\beta_{j}|<\Delta$,  we will 
 
 Sample  $v_{j} \mid \beta_{j},\lambda \sim \mathrm{Gamma}(\frac{1}{2},\frac{1}{4})$ 
 
 Sample $\tau_{j}^{2} \mid \lambda,\beta_{j},v_{j} \sim \mathrm{Gamma}(\frac{1}{2},\frac{1}{2v_{j}^{2}})$
 
+In practice, we find that, by setting $\Delta \leq 1e^{-5}$,  the resulting approximation error is negligible.
