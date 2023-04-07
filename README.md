@@ -147,13 +147,17 @@ $$
 
 
 
-3. Setting $\theta_{\Delta}=\left(\begin{array}{cc}
-   \lambda^{-2} D_\tau^{-1} & 0 \\
-   0 & I_q
-   \end{array}\right)\tilde{\theta}_{\Delta}$,  then we have
+3. Setting 
 
+$$
+\theta_{\Delta}=\left(\begin{array}{cc}
+\lambda^{-2} D_\tau^{-1} & 0 \\
+0 & I_q
+\end{array}\right)\tilde{\theta}_{\Delta}
+$$
+
+then we have
    
-
 $$
 \theta_{\Delta} \sim \mathcal{N}\left(\left(\begin{array}{cc}
 \lambda^{-2} D_\tau^{-1} & 0 \\
@@ -166,7 +170,6 @@ $$
 0 & I_q
 \end{array}\right)\right)
 $$
-
 
 
 ### Sampling $\Lambda^{1/2}$ and $\Lambda$
