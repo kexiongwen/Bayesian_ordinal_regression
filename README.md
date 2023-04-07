@@ -22,9 +22,13 @@ The response here is the overall rating a student has assigned for a particular 
 ## Model setting
 
 Considering the linear model
+
+
 $$
 Z_{ijk}=x_{ijk}\beta+U_{i}+V_{j}+W_{k}+\epsilon_{ijk}
 $$
+
+
 where $Z_{ijk}$ is the latent variable from the ith student who evaluates jth staff in kth course. $x_{ijk}$ is the $1\times p$ covarate vector and $\beta$ is the $p \times 1$ coefficient vector. The fixed effect is determined by $x_{ijk}\beta$. $U_{i}$ is the student-specific random effect. $V_{j}$ is the staff-specific random effect. $W_{k}$ is the course-specific random effect.
 
 
@@ -32,12 +36,13 @@ where $Z_{ijk}$ is the latent variable from the ith student who evaluates jth st
 The correspondence between the observed response $y_{ijk}$ and the latent variable $z_{ijk}$ is defined by the unknown cutoff points:
 
 
+
 $$
-y_{ijk}=s \,\,\, \text{if} \,\,\, \gamma_{s-1}
+y_{ijk}=s \quad \text{if} \quad \gamma_{s-1}
 $$
 
 
-where $-\infty=\gamma_{0}<\gamma_{1}<...<\gamma_{5}<\gamma_{6}=\infty$
+where $-\infty=\gamma_{0}<\gamma_{1}<\ldots<\gamma_{5}<\gamma_{6}=\infty$.
 
 
 
@@ -50,9 +55,11 @@ If we use the probit model, then the error $\epsilon_{ijk}$ is i.i.d standard ga
 Now I rewrite the model above in a more compact way, which is useful for me to derive the MCMC scheme and write down the efficient code. 
 
 
+
 $$
 Z=X\beta+Tb+\epsilon
 $$
+
 
 
 where $Z$ is $N \times 1$ vector, $X$ is $N \times p$ covarate matrix corresponding to fixed effects. $T$ is $N \times (109+18+14)$ covarate matrix corresponding to random effects. $\epsilon$ is $N \times 1$ error vector. The $(109+18+14) \times 1$ vector $b$ is the random effects.
@@ -107,7 +114,7 @@ By transformation from equation (3), we have
 
 
 $$
-\pi(\gamma_{1},\gamma_{2},...,\gamma_{S-1}|\alpha,v)=\frac{\Gamma(\alpha S)}{\Gamma(\alpha)^{S}} \prod_{s=1}^{S}[F(\gamma_{s})-F(\gamma_{s-1})]^{\alpha-1}\prod_{s=1}^{S-1}f(\gamma_{s})
+\pi(\gamma_{1},\gamma_{2},...,\gamma_{S-1} \mid \alpha,v)=\frac{\Gamma(\alpha S)}{\Gamma(\alpha)^{S}} \prod_{s=1}^{S}[F(\gamma_{s})-F(\gamma_{s-1})]^{\alpha-1}\prod_{s=1}^{S-1}f(\gamma_{s})
 $$
 
 
