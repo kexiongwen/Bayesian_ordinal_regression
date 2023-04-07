@@ -1,5 +1,121 @@
 # Bayesian ordinal regression with random effect 
 
+
+
+## Example dataset
+
+
+|   Y   | count   |
+|---------|----------|
+|   1   |   4    | 
+|   2   |   5    |
+|   3   |   9    |
+|   4   |   41   |
+|   5   |   90   |
+|   6   |  143    |
+|  Total  |  292    | 
+
+The response here is the overall rating a student has assigned for a particular staff member teaching a particular course. As students can/do evaluate multiple staff members from the same course or across courses, we thus have included random effects for the students, staff, and course. In total there are 109 students who completed the survey for 18 staff members across 14 courses. 
+
+
+
+## Model setting
+
+Considering the linear model
+$$
+Z_{ijk}=x_{ijk}\beta+U_{i}+V_{j}+W_{k}+\epsilon_{ijk}
+$$
+where $Z_{ijk}$ is the latent variable from the ith student who evaluates jth staff in kth course. $x_{ijk}$ is the $1\times p$ covarate vector and $\beta$ is the $p \times 1$ coefficient vector. The fixed effect is determined by $x_{ijk}\beta$. $U_{i}$ is the student-specific random effect. $V_{j}$ is the staff-specific random effect. $W_{k}$ is the course-specific random effect.
+
+
+
+The correspondence between the observed response $y_{ijk}$ and the latent variable $z_{ijk}$ is defined by the unknown cutoff points:
+
+
+$$
+y_{ijk}=s \,\,\, \text{if} \,\,\, \gamma_{s-1}
+$$
+
+
+where $-\infty=\gamma_{0}<\gamma_{1}<...<\gamma_{5}<\gamma_{6}=\infty$
+
+
+
+If we use the probit model, then the error $\epsilon_{ijk}$ is i.i.d standard gaussian distribution. If we use proportionl logit odds, then the error $\epsilon_{ijk}$ is i.i.d standard logistic distribution.
+
+
+
+## Compact representation of the model
+
+Now I rewrite the model above in a more compact way, which is useful for me to derive the MCMC scheme and write down the efficient code. 
+
+
+$$
+Z=X\beta+Tb+\epsilon
+$$
+
+
+where $Z$ is $N \times 1$ vector, $X$ is $N \times p$ covarate matrix corresponding to fixed effects. $T$ is $N \times (109+18+14)$ covarate matrix corresponding to random effects. $\epsilon$ is $N \times 1$ error vector. The $(109+18+14) \times 1$ vector $b$ is the random effects.
+
+In particular, we should note the $T$ is the zero-one matrix to select the random effect.
+
+Let's say the $1 \times (109+18+14)$  vector $t_{100}$ is the 100th row of matrix $T$ which is corresponding to 100th observation.Then only 3 elements from $t_{100}$ are one, others are 0. To be more exact, from 1th to 109th elements, only one of them is 1. From 110th to 127th elements,only one of them is 1. From 128th to 141th elements, only one of them is 1.
+
+In plain English, for 100th observation, $t_{100}$ records which student took the evaluation to which staff in which course.
+
+# Prior setting
+To introduce sparsity into the model, we choose exponential power prior for the parameters $\beta$
+$$
+\pi(\beta_{k} \mid \lambda)=\frac{\lambda^{2}}{4}\exp(-\lambda |\beta_{k}|^{\frac{1}{2}})    
+$$
+with hyper-parameter $\sqrt{\lambda} \sim \mathrm{Cauchy}(0,1)$. The exponential power prior with $\alpha=\frac{1}{2}$ has Normal-Exponential -Gamma mixture representation:
+
+
+$$
+\begin{aligned}
+&\beta | \tau_{1}^{2}, \ldots, \tau_{p}^{2}  \sim N_{p}\left(\mathbf{0},  \frac{1}{\lambda^{4}}D_{\tau^{2}}\right), \quad D_{\tau^{2}}=\mathrm{diag}\left(\tau_{1}^{2}, \ldots, \tau_{p}^{2}\right) \\ 
+&\tau_{1}^{2}|v_{1}^{2}, \ldots, \tau_{p}^{2}|v_{p}^{2}  \sim  \prod_{k=1}^{p} \mathrm{Exp}(\frac{1}{2v_{k}^{2}}) \\ 
+&v_{1} ,    \ldots, v_{p}    \sim \prod_{k=1}^{p} \mathrm{Gamma}(\frac{3}{2},\frac{1}{4}) 
+\end{aligned}    
+$$
+
+
+For setting the prior of the cutoff points $\gamma=(\gamma_{1},...,\gamma_{S-1})$, first suppose that there is a normal distribution $Z\sim N(0,\sigma_{0}^{2})$ with CDF function $F(\cdot)$, such that the probability at the interval between each cutoff point is $p_{s}=P(\gamma_{s-1}<z<\gamma_{s})=F(\gamma_{s})-F(\gamma_{s-1})$ with $j=1,..,S$. So $\sum_{s=1}^{S}p_{s}=1$. It follows that:
+
+
+$$
+\begin{aligned}
+\gamma_{1} &=F^{-1}\left(p_{1}\right) \\
+\gamma_{2} &=F^{-1}\left(p_{1}+p_{2}\right) \\
+\cdots & \\
+\gamma_{S-1} &=F^{-1}\left(p_{1}+p_{2}+\cdots+p_{S-1}\right)
+\end{aligned}
+$$
+
+
+
+Then we assign a  symmetric Dirichlet prior to $(p_{1},p_{2},...,p_{S})$. That is
+
+
+$$
+\pi\left(p_{1}, \ldots, p_{S} | \alpha\right)=\frac{\Gamma(\alpha S)}{\Gamma(\alpha)^{S}} \prod_{s=1}^{S} p_{s}^{\alpha-1}
+$$
+By transformation from equation (3), we have 
+
+
+$$
+\pi(\gamma_{1},\gamma_{2},...,\gamma_{S-1}|\alpha,v)=\frac{\Gamma(\alpha S)}{\Gamma(\alpha)^{S}} \prod_{s=1}^{S}[F(\gamma_{s})-F(\gamma_{s-1})]^{\alpha-1}\prod_{s=1}^{S-1}f(\gamma_{s})
+$$
+
+
+where $f(\cdot)$ is the density of $F(\cdot)$. Since the random effects $b \sim N(0,\Lambda^{-1})$ with unknown precision matrix $\Lambda^{-1}$,we assign a conjugate prior to $\Lambda$.
+
+
+$$
+\Lambda \sim \mathrm{Wishart}(v,P^{-1})
+$$
+
+
 ## PCG Sampler
 
 S1. Sample $\beta,b \mid W,\tau^{2},Z,\lambda,\Lambda  \sim \mathrm{N_{p+q}}((\tilde{X}^{T}W \tilde{X}+C)^{-1}\tilde{X}^{T}WZ,(\tilde{X}^{T} W\tilde{X}+C)^{-1})$
@@ -155,9 +271,9 @@ $$
 $$
 \tilde{\Phi}_{\Delta}\tilde{\theta}_{\Delta}=\tilde{e}
 $$
-   
 
-   
+
+
 
 3. Setting $\theta_{\Delta}=M^{-1/2}\tilde{\theta}_{\Delta}$ then we have 
 
@@ -165,9 +281,9 @@ $$
 $$
 \theta_{\Delta} \sim \mathcal{N}\left(M^{-1/2}\tilde{\Phi}_{\Delta}^{-1} X^{T} W Z, M^{-1/2}\tilde{\Phi}_{\Delta}^{-1}\tilde{\Phi}\tilde{\Phi}_{\Delta}^{-1}M^{-1/2}\right)
 $$
-   
 
-   
+
+
 
 ### Sampling $\Lambda^{1/2}$ and $\Lambda$
 
