@@ -49,10 +49,14 @@ $$
 
 
 
-where $\Phi=\tilde{X}^T W \tilde{X}+\left(\begin{array}{cc}
+where 
+
+$$
+\Phi=\tilde{X}^T W \tilde{X}+\left(\begin{array}{cc}
 \lambda^2 D_{\tau^2} & 0 \\
 0 & \Lambda
-\end{array}\right)$
+\end{array}\right)
+$$
 
 
 
