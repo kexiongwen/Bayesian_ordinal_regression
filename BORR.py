@@ -7,7 +7,7 @@ from scipy.stats import invgamma
 from scipy.stats import invgauss
 from scipy.stats import beta as beta_d
 
-def truncbeta(a,low,upp):
+def trunc(a,low,upp):
     
     if (upp-low)>0.4 or a==1:
         
@@ -52,14 +52,18 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
     
     v=6.424
     s=1.54
+    T1=1e-2
+    
     
     N,P=np.shape(X)
     _,Q=np.shape(T)
     d=1
-    F=np.ones((N,P+Q))
-    F[:,0:P]=X
-    F[:,P:P+Q]=T
-    G=np.ones((P+Q,1))
+    if np.count_nonzero(T)/(N*Q)<0.5:
+        sparse_T=True
+        T=sparse.csr_matrix(T)
+    else:
+        sparse_T=False
+        
  
     #Initialization
     beta_sample=np.ones((P,M+burn_in))
@@ -74,48 +78,70 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
     beta_sample[:,0:1]=np.random.randn(P,1)
     Lambda_sample=np.diag(np.ones(Q))
     Lambda_cholesky_sample=np.diag(np.ones(Q))
-    e1=np.ones((P+Q,1))
     Precision=np.ones((P+Q,P+Q))
+    e2=np.ones((P+Q,1))
+    Mask1=np.zeros((P,1))
+   
     
     cutpoints_sample=np.linspace(-1*np.ones(M+burn_in), np.ones(M+burn_in), num=(np.unique(Y).size+1))
     cutpoints_sample[0,:]=-np.Inf
     cutpoints_sample[-1,:]=np.Inf
-    
-    
+      
     #MCMC loop
     
     for i in range(1,M+burn_in):
-        
+
         #Sample beta and b
-
         #Prior preconditioning matrix from global-local shrinkage
-        G[0:P,0]=tau_sample/lam_sample**2
-        G[P:P+Q,0]=np.ones(Q)                    
-
+        G=tau_sample/lam_sample**2
+        Mask1[:,0]=(G<T1).astype(float)
+     
         #Weight
         D=np.sqrt(omega_sample)
       
         #Preconditioning feature matrix
-        FTD=(D*F).T
-        GFTD=G*FTD
+        XTD=(D*X).T
+        if sparse_T:
+            GTTD=sparse.csr_matrix((D*T).T)
+        else:
+            GTTD=(D*T).T
+
+        GXTD=G.reshape(P,1)*XTD
         DZ=D*Z_sample
   
-        #Preconditioning covariance matrix
-        Precision=GFTD@GFTD.T
-        Precision[0:P,0:P]=Precision[0:P,0:P]+sparse.diags(np.ones(P))
-        Precision[P:P+Q,P:P+Q]=Precision[P:P+Q,P:P+Q]+Lambda_sample
+        #Preconditioning precision matrix
+        Precision[0:P,0:P]=GXTD@GXTD.T*(1-Mask1@Mask1.T)+sparse.diags(np.ones(P))
+        
+        if sparse_T:
 
-        e1[0:P,0:1]=np.random.randn(P,1)
-        e1[P:P+Q,0:1]=Lambda_cholesky_sample@np.random.randn(Q,1)
+            Precision[P:P+Q,P:P+Q]=sparse.csr_matrix.dot(GTTD,GTTD.T)+Lambda_sample
+            GTTDXG=sparse.csr_matrix.dot(GTTD,GXTD.T)
+            Precision[0:P,P:P+Q]=GTTDXG.T
+            Precision[P:P+Q,0:P]=GTTDXG
 
+        else:
+
+            Precision[P:P+Q,P:P+Q]=GTTD@GTTD.T+Lambda_sample
+            GTTDXG=GTTD@GXTD.T
+            Precision[0:P,P:P+Q]=GTTDXG.T
+            Precision[P:P+Q,0:P]=GTTDXG
+
+        if np.count_nonzero(Precision)/(P+Q)**2<0.3:
+            Precision=sparse.csr_matrix(Precision)
+
+            
         #Sample e
-        e2=GFTD@DZ+GFTD@np.random.randn(N,1)+e1
+        e1=np.random.randn(N,1)
+        e2[0:P,0:1]=GXTD@DZ+GXTD@e1+np.random.randn(P,1)
+        e2[P:P+Q,0:1]=GTTD@DZ+GTTD@e1+Lambda_cholesky_sample@np.random.randn(Q,1)
 
+        
+      
         #Solve Preconditioning the linear system by conjugated gradient method
         beta_b,_=cg(Precision,e2.ravel(),x0=beta_b,tol=1e-3)
         
         #revert to the solution of the original system
-        beta_sample[:,i]=G[0:P,0]*beta_b[0:P]
+        beta_sample[:,i]=G*beta_b[0:P]
         b_sample[:,i]=beta_b[P:]
       
         #Sample lambda
@@ -157,11 +183,12 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
             scale=ink[j+1]-ink[j-1]    
             low2=(logistic.cdf(np.amax(Z_sample[Y.ravel()==j]))-ink[j-1])/scale
             upp2=(logistic.cdf(np.amin(Z_sample[Y.ravel()==(j+1)]))-ink[j-1])/scale
-            ink[j]=truncbeta(alpha,low2,upp2)*scale+ink[j-1]
+            ink[j]=trunc(alpha,low2,upp2)*scale+ink[j-1]
                   
         cutpoints_sample[:,i]=logistic.ppf(ink)
-                     
-        
+                   
+    #End of MCMC chain    
+    
     MCMC_chain=(beta_sample[:,burn_in:],b_sample[:,burn_in:],cutpoints_sample[:,burn_in:])
     
     return MCMC_chain
