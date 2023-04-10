@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import sparse
-from scipy.linalg import block_diag
 from scipy.sparse.linalg import cg
 from scipy.sparse import spdiags
 from scipy.stats import logistic
@@ -8,7 +7,7 @@ from scipy.stats import invgamma
 from scipy.stats import invgauss
 from scipy.stats import beta as beta_d
 
-def trunc(a,low,upp):
+def truncbeta(a,low,upp):
     
     if (upp-low)>0.4 or a==1:
         
@@ -49,7 +48,7 @@ def trunc(a,low,upp):
     return x
 
 
-def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
+def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
     
     v=6.424
     s=1.54
@@ -57,7 +56,10 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
     N,P=np.shape(X)
     _,Q=np.shape(T)
     d=1
-    F=np.concatenate((X, T), axis=1)
+    F=np.ones((N,P+Q))
+    F[:,0:P]=X
+    F[:,P:P+Q]=T
+    G=np.ones((P+Q,1))
  
     #Initialization
     beta_sample=np.ones((P,M+burn_in))
@@ -66,17 +68,20 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
     tau_sample=np.ones(P)
     v_sample=np.ones(P)
     Z_sample=np.zeros((N,1))
-    omega_sample=np.ones(N)
+    omega_sample=np.ones((N,1))
     lam_sample=1
     phi_sample=1
     beta_sample[:,0:1]=np.random.randn(P,1)
     Lambda_sample=np.diag(np.ones(Q))
     Lambda_cholesky_sample=np.diag(np.ones(Q))
+    e1=np.ones((P+Q,1))
+    Precision=np.ones((P+Q,P+Q))
     
     cutpoints_sample=np.linspace(-1*np.ones(M+burn_in), np.ones(M+burn_in), num=(np.unique(Y).size+1))
     cutpoints_sample[0,:]=-np.Inf
     cutpoints_sample[-1,:]=np.Inf
-      
+    
+    
     #MCMC loop
     
     for i in range(1,M+burn_in):
@@ -84,28 +89,33 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
         #Sample beta and b
 
         #Prior preconditioning matrix from global-local shrinkage
-        G_diag=tau_sample/lam_sample**2
-        G=sparse.csr_matrix(block_diag(np.diag(G_diag), np.diag(np.ones(Q))))
+        G[0:P,0]=tau_sample/lam_sample**2
+        G[P:P+Q,0]=np.ones(Q)                    
 
         #Weight
-        D=spdiags((np.sqrt(omega_sample)).ravel(),0,N,N)
+        D=np.sqrt(omega_sample)
       
         #Preconditioning feature matrix
-        FTD=sparse.csr_matrix.dot(F.T,D)
-        GFTD=sparse.csr_matrix.dot(G,FTD)
-        DZ=sparse.csr_matrix.dot(D,Z_sample)
+        FTD=(D*F).T
+        GFTD=G*FTD
+        DZ=D*Z_sample
   
         #Preconditioning covariance matrix
-        GFTDFG=GFTD@GFTD.T
+        Precision=GFTD@GFTD.T
+        Precision[0:P,0:P]=Precision[0:P,0:P]+sparse.diags(np.ones(P))
+        Precision[P:P+Q,P:P+Q]=Precision[P:P+Q,P:P+Q]+Lambda_sample
+
+        e1[0:P,0:1]=np.random.randn(P,1)
+        e1[P:P+Q,0:1]=Lambda_cholesky_sample@np.random.randn(Q,1)
 
         #Sample e
-        e=GFTD@DZ+GFTD@np.random.randn(N,1)+sparse.csr_matrix.dot(sparse.csr_matrix(block_diag(np.diag(np.ones(P)), Lambda_cholesky_sample)),np.random.randn(P+Q,1))
+        e2=GFTD@DZ+GFTD@np.random.randn(N,1)+e1
 
         #Solve Preconditioning the linear system by conjugated gradient method
-        beta_b,_=cg(GFTDFG+sparse.csr_matrix(block_diag(np.diag(np.ones(P)), Lambda_sample)),e.ravel(),x0=beta_b,tol=1e-3)
+        beta_b,_=cg(Precision,e2.ravel(),x0=beta_b,tol=1e-3)
         
         #revert to the solution of the original system
-        beta_sample[:,i]=G_diag*beta_b[0:P]
+        beta_sample[:,i]=G[0:P,0]*beta_b[0:P]
         b_sample[:,i]=beta_b[P:]
       
         #Sample lambda
@@ -128,7 +138,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
         Z_sample=(Mean-np.log(1/((logistic.cdf(upp1,loc=Mean,scale=1)-logistic.cdf(low1,loc=Mean,scale=1))*np.random.rand(N)+logistic.cdf(low1,loc=Mean,scale=1))-1)).reshape(N,1)
        
         #Sample w
-        omega_sample=np.random.gamma(v*np.ones(N)/2,2/(v*s**2+(Z_sample-Mean)**2))
+        omega_sample=np.random.gamma(v/2,2/(v*s**2+np.square(Z_sample-Mean.reshape(N,1))))
         
         #Sample Lambda
         A2=(spdiags(np.ones(Q),0,Q,Q)-b_sample[:,i:i+1]@b_sample[:,i:i+1].T/(d+b_sample[:,i:i+1].T@b_sample[:,i:i+1]))/d
@@ -147,12 +157,12 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=5000,alpha=1):
             scale=ink[j+1]-ink[j-1]    
             low2=(logistic.cdf(np.amax(Z_sample[Y.ravel()==j]))-ink[j-1])/scale
             upp2=(logistic.cdf(np.amin(Z_sample[Y.ravel()==(j+1)]))-ink[j-1])/scale
-            ink[j]=trunc(alpha,low2,upp2)*scale+ink[j-1]
+            ink[j]=truncbeta(alpha,low2,upp2)*scale+ink[j-1]
                   
         cutpoints_sample[:,i]=logistic.ppf(ink)
-                   
-    #End of MCMC chain    
-    
+                     
+        
     MCMC_chain=(beta_sample[:,burn_in:],b_sample[:,burn_in:],cutpoints_sample[:,burn_in:])
     
     return MCMC_chain
+
