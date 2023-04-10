@@ -48,7 +48,7 @@ def trunc(a,low,upp):
     return x
 
 
-def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
+def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
     
     v=6.424
     s=1.54
@@ -58,11 +58,10 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
     N,P=np.shape(X)
     _,Q=np.shape(T)
     d=1
-    if np.count_nonzero(T)/(N*Q)<0:
-        sparse_T=True
-        T=sparse.csr_matrix(T)
-    else:
-        sparse_T=False
+
+    if sparse_T:
+        TT=sparse.csr_matrix(T.T)
+    
         
  
     #Initialization
@@ -78,7 +77,12 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
     beta_sample[:,0:1]=np.random.randn(P,1)
     Lambda_sample=np.diag(np.ones(Q))
     Lambda_cholesky_sample=np.diag(np.ones(Q))
-    Precision=np.ones((P+Q,P+Q))
+
+    if sparse_T:
+        Precision=sparse.lil_matrix((P+Q, P+Q))
+    else:
+        Precision=np.ones((P+Q,P+Q))
+
     e2=np.ones((P+Q,1))
     Mask1=np.zeros((P,1))
    
@@ -102,7 +106,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
         #Preconditioning feature matrix
         XTD=(D*X).T
         if sparse_T:
-            GTTD=sparse.csr_matrix((D*T).T)
+            GTTD=(TT.multiply(D.reshape(1,-1)))
         else:
             GTTD=(D*T).T
 
@@ -110,7 +114,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
         DZ=D*Z_sample
   
         #Preconditioning precision matrix
-        Precision[0:P,0:P]=GXTD@GXTD.T*(1-Mask1@Mask1.T)+sparse.diags(np.ones(P))
+        Precision[0:P,0:P]=GXTD@GXTD.T*(1-Mask1@Mask1.T)+sparse.eye(P)
         
         if sparse_T:
 
@@ -126,19 +130,19 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
             Precision[0:P,P:P+Q]=GTTDXG.T
             Precision[P:P+Q,0:P]=GTTDXG
 
-        #if np.count_nonzero(Precision)/(P+Q)**2<0.3:
-            #Precision=sparse.csr_matrix(Precision)
+    
+        if sparse_T:
+            mat=Precision.tocsr()
+        else:
+            mat=Precision
 
-            
         #Sample e
         e1=np.random.randn(N,1)
         e2[0:P,0:1]=GXTD@DZ+GXTD@e1+np.random.randn(P,1)
         e2[P:P+Q,0:1]=GTTD@DZ+GTTD@e1+Lambda_cholesky_sample@np.random.randn(Q,1)
 
-        
-      
         #Solve Preconditioning the linear system by conjugated gradient method
-        beta_b,_=cg(Precision,e2.ravel(),x0=beta_b,tol=1e-3)
+        beta_b,_=cg(mat,e2.ravel(),x0=beta_b,tol=1e-3)
         
         #revert to the solution of the original system
         beta_sample[:,i]=G*beta_b[0:P]
