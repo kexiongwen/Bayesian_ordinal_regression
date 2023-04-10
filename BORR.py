@@ -53,8 +53,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
     v=6.424
     s=1.54
     T1=1e-2
-    
-    
+     
     N,P=np.shape(X)
     _,Q=np.shape(T)
     d=1
@@ -62,8 +61,6 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
     if sparse_T:
         TT=sparse.csr_matrix(T.T)
     
-        
- 
     #Initialization
     beta_sample=np.ones((P,M+burn_in))
     b_sample=np.ones((Q,M+burn_in))
@@ -105,6 +102,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
       
         #Preconditioning feature matrix
         XTD=(D*X).T
+
         if sparse_T:
             GTTD=(TT.multiply(D.reshape(1,-1)))
         else:
@@ -153,12 +151,14 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
         
         #sample_phi
         phi_sample=invgamma.rvs(1)*(1+lam_sample)
+
+        temp=lam_sample**2*np.abs(beta_sample[:,i])
         
         #Sample V
-        v_sample=2/invgauss.rvs((lam_sample*np.abs(beta_sample[:,i])**0.5)**-1)
+        v_sample=2/invgauss.rvs(np.reciprocal(np.sqrt(temp)))
         
         #Sample tau2
-        tau_sample=v_sample/np.sqrt(invgauss.rvs(v_sample/(lam_sample**2*abs(beta_sample[:,i]))))
+        tau_sample=v_sample/np.sqrt(invgauss.rvs(v_sample/temp))
         
         #Sample Z
         Mean=X@beta_sample[:,i]+T@b_sample[:,i]
