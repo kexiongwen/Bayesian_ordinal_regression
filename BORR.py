@@ -58,7 +58,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
     N,P=np.shape(X)
     _,Q=np.shape(T)
     d=1
-    if np.count_nonzero(T)/(N*Q)<0.5:
+    if np.count_nonzero(T)/(N*Q)<0:
         sparse_T=True
         T=sparse.csr_matrix(T)
     else:
@@ -126,8 +126,8 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,burn_in=10000,alpha=1):
             Precision[0:P,P:P+Q]=GTTDXG.T
             Precision[P:P+Q,0:P]=GTTDXG
 
-        if np.count_nonzero(Precision)/(P+Q)**2<0.3:
-            Precision=sparse.csr_matrix(Precision)
+        #if np.count_nonzero(Precision)/(P+Q)**2<0.3:
+            #Precision=sparse.csr_matrix(Precision)
 
             
         #Sample e
