@@ -69,7 +69,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
     v_sample=np.ones(P)
     Z_sample=np.zeros((N,1))
     omega_sample=np.ones((N,1))
-    lam_sample=1
+    lam_sample=np.ones(M+burn_in)
     phi_sample=1
     beta_sample[:,0:1]=np.random.randn(P,1)
     Lambda_sample=np.diag(np.ones(Q))
@@ -94,7 +94,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
 
         #Sample beta and b
         #Prior preconditioning matrix from global-local shrinkage
-        G=tau_sample/lam_sample**2
+        G=tau_sample/lam_sample[i-1]**2
         Mask1[:,0]=(G<T1).astype(float)
      
         #Weight
@@ -147,12 +147,12 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
         b_sample[:,i]=beta_b[P:]
       
         #Sample lambda
-        lam_sample=np.random.gamma(2*P+0.5,((np.abs(beta_sample[:,i])**0.5).sum()+1/phi_sample)**-1)
+        lam_sample[i]=np.random.gamma(2*P+0.5,((np.abs(beta_sample[:,i])**0.5).sum()+1/phi_sample)**-1)
         
         #sample_phi
-        phi_sample=invgamma.rvs(1)*(1+lam_sample)
+        phi_sample=invgamma.rvs(1)*(1+lam_sample[i])
 
-        temp=lam_sample**2*np.abs(beta_sample[:,i])
+        temp=lam_sample[i]**2*np.abs(beta_sample[:,i])
         
         #Sample V
         v_sample=2/invgauss.rvs(np.reciprocal(np.sqrt(temp)))
@@ -193,7 +193,7 @@ def Bayesian_Ordinal_CLM_PO(Y,X,T,M=10000,sparse_T=False,burn_in=10000,alpha=1):
                    
     #End of MCMC chain    
     
-    MCMC_chain=(beta_sample[:,burn_in:],b_sample[:,burn_in:],cutpoints_sample[:,burn_in:])
+    MCMC_chain=(beta_sample[:,burn_in:],b_sample[:,burn_in:],cutpoints_sample[:,burn_in:],lam_sample[burn_in:])
     
     return MCMC_chain
 
